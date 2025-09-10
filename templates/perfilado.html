@@ -94,11 +94,11 @@
     <div>
       <label for="perfil">Perfil</label>
       <select id="perfil" name="perfil">
-        <option value="Frutos Citricos" {% if defaults['perfil'] == 'Frutos Citricos' %}selected{% endif %}>Frutos Citricos</option>
-        <option value="Frutos de Huesos" {% if defaults['perfil'] == 'Frutos de Huesos' %}selected{% endif %}>Frutos de Huesos</option>
-        <option value="Caramelo" {% if defaults['perfil'] == 'Caramelo' %}selected{% endif %}>Caramelo</option>
-        <option value="Chocolate" {% if defaults['perfil'] == 'Chocolate' %}selected{% endif %}>Chocolate</option>
-        <option value="Blends" {% if defaults['perfil'] == 'Blends' %}selected{% endif %}>Blends</option>
+        <option value="Frutos Citricos - FC" {% if defaults['perfil'] == 'Frutos Citricos - FC' %}selected{% endif %}>Frutos Citricos</option>
+        <option value="Frutos de Huesos - FC" {% if defaults['perfil'] == 'Frutos de Huesos - FC' %}selected{% endif %}>Frutos de Huesos</option>
+        <option value="Caramelo - CA" {% if defaults['perfil'] == 'Caramelo - CA' %}selected{% endif %}>Caramelo</option>
+        <option value="Chocolate - CH" {% if defaults['perfil'] == 'Chocolate - CH' %}selected{% endif %}>Chocolate</option>
+        <option value="Blends - BL" {% if defaults['perfil'] == 'Blends - BL' %}selected{% endif %}>Blends</option>
       </select>
     </div>
     <div><label for="caramelizacion">Caramelizacion (min)</label><input type="number" id="caramelizacion" name="caramelizacion" step="0.01" min="0" value="{{ defaults['caramelizacion'] }}"></div>

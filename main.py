@@ -331,6 +331,9 @@ async def perfilado_submit_form(
     trillado_rows = sheet_trillado.get_all_values()
     id_trillado_options = [r[5] for r in trillado_rows[1:] if len(r) > 5] if len(trillado_rows) > 1 else []
 
+    #id_perfilado
+    id_perfilado = id_trillado + "-"+perfil[-2:].upper()
+
     # Save to Perfilado worksheet
     sheet_perfilado = get_sheet("Perfilado")
     # Check for duplicate id_trillado in Perfilado worksheet (column 0)
@@ -343,7 +346,7 @@ async def perfilado_submit_form(
             id_trillado, muestra_pergamino, humedad_pergamino, muestra_trillado, malla, densidad, humedad_grano_verde,perda_casca,
             negro, agrio, cereza_seca, dano_hongo, impurezas, dano_severo_insectos, parcial_negro, parcial_agrio,
             pergamino, flotador, inmaduro, averanado, concha, partido_mordido, cascara_pulpa_seca, dano_leve_insectos,
-            perfil, caramelizacion, desarrollo
+            perfil, caramelizacion, desarrollo, id_perfilado
         ]
         sheet_perfilado.append_row(row)
         msg = f"✅ Perfilado registrado! ID Trillado: {id_trillado}"
