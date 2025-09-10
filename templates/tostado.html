@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Tostado Form</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body { font-family: Arial, sans-serif; max-width:900px; margin:30px auto; padding:0 16px; }
+    h1 { text-align:center; }
+    form { display:grid; grid-template-columns: 1fr 1fr; gap:12px; align-items:stretch; }
+    label { font-weight:600; margin-bottom:6px; display:block; }
+    input[type="text"], input[type="number"], input[type="date"], select {
+      width:100%; padding:8px; box-sizing:border-box; border:1px solid #ccc; border-radius:6px;
+    }
+    textarea { resize:vertical; min-height:80px; }
+    .full { grid-column: 1 / -1; }
+    button { padding:10px 16px; border-radius:8px; cursor:pointer; border:none; background:#1f8ef1; color:white; font-weight:600; }
+    .small { font-size:0.9rem; color:#444; }
+    .section-header { 
+      grid-column: 1 / -1; 
+      margin: 20px 0 10px 0; 
+      padding: 8px 0; 
+      border-bottom: 2px solid #e0e0e0; 
+      font-size: 1.1em; 
+      font-weight: 600; 
+      color: #333; 
+    }
+  </style>
+</head>
+<body>
+  <h1>Tostado Form</h1>
+
+  {% if msg %}
+  <div style="margin:16px 0; color: #d9534f; font-weight: bold;">{{ msg }}</div>
+  {% endif %}
+
+  <form id="tostadoForm" method="post" action="/tostado">
+    <div>
+      <label for="id_perfilado">ID Perfilado</label>
+      <select id="id_perfilado" name="id_perfilado" required>
+        {% for id in id_perfilado_options %}
+          <option value="{{ id }}" {% if defaults['id_perfilado'] == id %}selected{% endif %}>{{ id }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="fecha_toste">Fecha Toste</label>
+      <input type="date" id="fecha_toste" name="fecha_toste" value="{{ defaults['fecha_toste'] or '' }}" required>
+    </div>
+    <script>
+      // Set today's date as default if no value is present
+      (function() {
+      var fechaInput = document.getElementById('fecha_toste');
+      if (!fechaInput.value) {
+        var today = new Date();
+        var yyyy = today.getFullYear();
+        var mm = String(today.getMonth() + 1).padStart(2, '0');
+        var dd = String(today.getDate()).padStart(2, '0');
+        fechaInput.value = yyyy + '-' + mm + '-' + dd;
+      }
+      })();
+    </script>
+    <div>
+      <label for="batch">Batch</label>
+      <input type="text" id="batch" name="batch" value="{{ defaults['batch'] }}" required>
+    </div>
+    <div>
+      <label for="cantidad_kg">Cantidad (Kg)</label>
+      <input type="number" id="cantidad_kg" name="cantidad_kg" step="0.01" min="0" value="{{ defaults['cantidad_kg'] }}" required>
+    </div>
+    <div>
+      <label for="caramelizacion">Caramelizacion (min)</label>
+      <input type="number" id="caramelizacion" name="caramelizacion" step="0.01" min="0" value="{{ defaults['caramelizacion'] }}">
+    </div>
+    <div>
+      <label for="desarrollo">Desarrollo (min)</label>
+      <input type="number" id="desarrollo" name="desarrollo" step="0.01" min="0" value="{{ defaults['desarrollo'] }}">
+    </div>
+    <div>
+      <label for="perfil_salida">Perfil Salida</label>
+      <select id="perfil_salida" name="perfil_salida" required>
+        <option value="FC" {% if defaults['perfil_salida'] == 'FC' %}selected{% endif %}>FC - Frutos Citricos</option>
+        <option value="FH" {% if defaults['perfil_salida'] == 'FH' %}selected{% endif %}>FH - Frutos de Huesos</option>
+        <option value="CA" {% if defaults['perfil_salida'] == 'CA' %}selected{% endif %}>CA - Caramelo</option>
+        <option value="CH" {% if defaults['perfil_salida'] == 'CH' %}selected{% endif %}>CH - Chocolate</option>
+        <option value="BL" {% if defaults['perfil_salida'] == 'BL' %}selected{% endif %}>BL - Blends</option>
+      </select>
+    </div>
+    <div>
+      <label for="id_tostado">ID Tostado (Auto-generado)</label>
+      <input type="text" id="id_tostado" name="id_tostado" value="{{ defaults['id_tostado'] }}" readonly style="background-color: #f5f5f5;">
+    </div>
+    
+    <div class="full" style="text-align:center; margin-top:10px;">
+      <button type="submit">Submit</button>
+      <button type="button" onclick="cleanTostadoForm()">Clean form</button>
+    </div>
+  </form>
+
+  <script>
+    function cleanTostadoForm() {
+      const form = document.getElementById('tostadoForm');
+      form.querySelectorAll('input[type="text"]:not([readonly]), input[type="number"], input[type="date"]').forEach(el => el.value = '');
+      form.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
+      updateIdTostado();
+    }
+
+    function updateIdTostado() {
+      const idPerfilado = document.getElementById('id_perfilado').value;
+      const batch = document.getElementById('batch').value;
+      const perfilSalida = document.getElementById('perfil_salida').value;
+      
+      if (idPerfilado && batch && perfilSalida) {
+        const idTostado = idPerfilado + '-' + batch + '-' + perfilSalida;
+        document.getElementById('id_tostado').value = idTostado;
+      } else {
+        document.getElementById('id_tostado').value = '';
+      }
+    }
+
+    // Update ID Tostado when any of the relevant fields change
+    document.getElementById('id_perfilado').addEventListener('change', updateIdTostado);
+    document.getElementById('batch').addEventListener('input', updateIdTostado);
+    document.getElementById('perfil_salida').addEventListener('change', updateIdTostado);
+
+    // Initialize ID Tostado on page load
+    document.addEventListener('DOMContentLoaded', updateIdTostado);
+  </script>
+
+  {% if last_submission %}
+  <div class="full" style="margin-top:30px; border:1px solid #ccc; border-radius:8px; padding:16px; background:#f9f9f9;">
+    <h2>Last Submission</h2>
+    <ul>
+      <li><strong>ID Perfilado:</strong> {{ last_submission['id_perfilado'] }}</li>
+      <li><strong>Fecha Toste:</strong> {{ last_submission['fecha_toste'] }}</li>
+      <li><strong>Batch:</strong> {{ last_submission['batch'] }}</li>
+      <li><strong>Cantidad (Kg):</strong> {{ last_submission['cantidad_kg'] }}</li>
+      <li><strong>Caramelizacion (min):</strong> {{ last_submission['caramelizacion'] }}</li>
+      <li><strong>Desarrollo (min):</strong> {{ last_submission['desarrollo'] }}</li>
+      <li><strong>Perfil Salida:</strong> {{ last_submission['perfil_salida'] }}</li>
+      <li><strong>ID Tostado:</strong> {{ last_submission['id_tostado'] }}</li>
+    </ul>
+  </div>
+  {% endif %}
+</body>
+</html>

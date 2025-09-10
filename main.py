@@ -391,3 +391,91 @@ async def perfilado_submit_form(
         }
     )
 
+
+# === Tostado GET and POST ===
+@app.get("/tostado", response_class=HTMLResponse)
+def tostado_form_page(request: Request):
+    """Show the Tostado form, with ID Perfilado options from Perfilado sheet."""
+    today = date.today().isoformat()
+    sheet_perfilado = get_sheet("Perfilado")
+    perfilado_rows = sheet_perfilado.get_all_values()
+    # Get all IDs from the last column (ID Perfilado)
+    id_perfilado_options = [r[-1] for r in perfilado_rows[1:] if len(r) > 0] if len(perfilado_rows) > 1 else []
+    defaults = {
+        "id_perfilado": id_perfilado_options[0] if id_perfilado_options else "",
+        "fecha_toste": today,
+        "batch": "",
+        "cantidad_kg": "",
+        "caramelizacion": "",
+        "desarrollo": "",
+        "perfil_salida": "FC",
+        "id_tostado": ""
+    }
+    return templates.TemplateResponse(
+        "tostado.html",
+        {
+            "request": request,
+            "msg": None,
+            "last_submission": None,
+            "defaults": defaults,
+            "id_perfilado_options": id_perfilado_options
+        }
+    )
+
+
+@app.post("/tostado", response_class=HTMLResponse)
+async def tostado_submit_form(
+    request: Request,
+    id_perfilado: str = Form(...),
+    fecha_toste: str = Form(...),
+    batch: str = Form(...),
+    cantidad_kg: float = Form(...),
+    caramelizacion: float = Form(0),
+    desarrollo: float = Form(0),
+    perfil_salida: str = Form(...)
+):
+    """Handle Tostado form submission and save to Tostado worksheet."""
+    # Get valid IDs for dropdown
+    sheet_perfilado = get_sheet("Perfilado")
+    perfilado_rows = sheet_perfilado.get_all_values()
+    id_perfilado_options = [r[-1] for r in perfilado_rows[1:] if len(r) > 0] if len(perfilado_rows) > 1 else []
+
+    # Generate ID Tostado
+    id_tostado = f"{id_perfilado}-{batch}-{perfil_salida}"
+
+    # Save to Tostado worksheet
+    sheet_tostado = get_sheet("Tostado")
+    # Check for duplicate id_tostado in Tostado worksheet
+    tostado_rows = sheet_tostado.get_all_values()
+    existing_ids_tostado = [r[-1] for r in tostado_rows[1:] if len(r) > 0] if len(tostado_rows) > 1 else []
+    if id_tostado in existing_ids_tostado:
+        msg = f"❌ Ya esta registrado! ID Tostado: {id_tostado}"
+    else:
+        row = [
+            id_perfilado, fecha_toste, batch, cantidad_kg, caramelizacion, desarrollo, perfil_salida, id_tostado
+        ]
+        sheet_tostado.append_row(row)
+        msg = f"✅ Tostado registrado! ID Tostado: {id_tostado}"
+
+    last_submission = {
+        "id_perfilado": id_perfilado,
+        "fecha_toste": fecha_toste,
+        "batch": batch,
+        "cantidad_kg": cantidad_kg,
+        "caramelizacion": caramelizacion,
+        "desarrollo": desarrollo,
+        "perfil_salida": perfil_salida,
+        "id_tostado": id_tostado
+    }
+    defaults = last_submission.copy()
+    return templates.TemplateResponse(
+        "tostado.html",
+        {
+            "request": request,
+            "msg": msg,
+            "last_submission": last_submission,
+            "defaults": defaults,
+            "id_perfilado_options": id_perfilado_options
+        }
+    )
+
