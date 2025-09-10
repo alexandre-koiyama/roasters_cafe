@@ -19,6 +19,8 @@ templates = Jinja2Templates(directory="templates")
 CREDENTIALS_PATH = os.environ.get("GOOGLE_CREDENTIALS_JSON", "credentials.json")
 SHEET_NAME = os.environ.get("GOOGLE_SHEET_NAME", "Coffee Roaster - Recebimiento")
 
+
+
 def get_sheet(work_sheet_name: str):
     """Return a worksheet object by name."""
     scope = [
@@ -30,6 +32,9 @@ def get_sheet(work_sheet_name: str):
     return client.open(SHEET_NAME).worksheet(work_sheet_name)
 
 
+@app.get("/")
+def home():
+    return {"message": "Welcome to Roasters Café API."}
 
 
 # === Recebimiento Routes ===
