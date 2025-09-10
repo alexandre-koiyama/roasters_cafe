@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Perfilado Form</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body { font-family: Arial, sans-serif; max-width:900px; margin:30px auto; padding:0 16px; }
+    h1 { text-align:center; }
+    form { display:grid; grid-template-columns: 1fr 1fr; gap:12px; align-items:stretch; }
+    label { font-weight:600; margin-bottom:6px; display:block; }
+    input[type="text"], input[type="number"] {
+      width:100%; padding:8px; box-sizing:border-box; border:1px solid #ccc; border-radius:6px;
+    }
+    textarea { resize:vertical; min-height:80px; }
+    .full { grid-column: 1 / -1; }
+    button { padding:10px 16px; border-radius:8px; cursor:pointer; border:none; background:#1f8ef1; color:white; font-weight:600; }
+    .small { font-size:0.9rem; color:#444; }
+    .section-header { 
+      grid-column: 1 / -1; 
+      margin: 20px 0 10px 0; 
+      padding: 8px 0; 
+      border-bottom: 2px solid #e0e0e0; 
+      font-size: 1.1em; 
+      font-weight: 600; 
+      color: #333; 
+    }
+  </style>
+</head>
+<body>
+  <h1>Perfilado Form</h1>
+
+  {% if msg %}
+  <div style="margin:16px 0; color: #d9534f; font-weight: bold;">{{ msg }}</div>
+  {% endif %}
+
+  <form id="perfiladoForm" method="post" action="/perfilado">
+    <div>
+      <label for="id_trillado">ID Trillado</label>
+      <select id="id_trillado" name="id_trillado" required>
+        {% for id in id_trillado_options %}
+          <option value="{{ id }}" {% if defaults['id_trillado'] == id %}selected{% endif %}>{{ id }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="fecha">Fecha Test</label>
+      <input type="date" id="fecha" name="fecha" value="{{ defaults['fecha'] or '' }}" required>
+    </div>
+    <script>
+      // Set today's date as default if no value is present
+      (function() {
+      var fechaInput = document.getElementById('fecha');
+      if (!fechaInput.value) {
+        var today = new Date();
+        var yyyy = today.getFullYear();
+        var mm = String(today.getMonth() + 1).padStart(2, '0');
+        var dd = String(today.getDate()).padStart(2, '0');
+        fechaInput.value = yyyy + '-' + mm + '-' + dd;
+      }
+      })();
+    </script>
+    <div>
+      <label for="muestra_pergamino">Muestra Pergamiño (g)</label>
+      <input type="number" id="muestra_pergamino" name="muestra_pergamino" step="0.01" min="0" value="{{ defaults['muestra_pergamino'] or 300 }}">
+    </div>
+    <div><label for="humedad_pergamino">Humedad Pergamino (%)</label><input type="number" id="humedad_pergamino" name="humedad_pergamino" step="0.01" min="0" max="100" value="{{ defaults['humedad_pergamino'] }}"></div>
+    <div><label for="muestra_trillado">Muestra Trillado (g)</label><input type="number" id="muestra_trillado" name="muestra_trillado" step="0.01" min="0" value="{{ defaults['muestra_trillado'] }}"></div>
+    <div><label for="malla">Malla</label><input type="text" id="malla" name="malla" value="{{ defaults['malla'] }}"></div>
+    <div><label for="densidad">Densidad</label><input type="number" id="densidad" name="densidad" step="0.01" min="0" value="{{ defaults['densidad'] }}"></div>
+    <div><label for="humedad_grano_verde">Humedad Grano Verde (g)</label><input type="number" id="humedad_grano_verde" name="humedad_grano_verde" step="0.01" min="0" value="{{ defaults['humedad_grano_verde'] }}"></div>
+    
+    <h2 class="section-header">Conteo de Defectos Primarios</h2>
+    <div><label for="negro">Negro</label><input type="number" id="negro" name="negro" step="0.01" min="0" value="{{ defaults['negro'] }}"></div>
+    <div><label for="agrio">Agrio</label><input type="number" id="agrio" name="agrio" step="0.01" min="0" value="{{ defaults['agrio'] }}"></div>
+    <div><label for="cereza_seca">Cereza Seca</label><input type="number" id="cereza_seca" name="cereza_seca" step="0.01" min="0" value="{{ defaults['cereza_seca'] }}"></div>
+    <div><label for="dano_hongo">Daño por hongo</label><input type="number" id="dano_hongo" name="dano_hongo" step="0.01" min="0" value="{{ defaults['dano_hongo'] }}"></div>
+    <div><label for="impurezas">Impurezas</label><input type="number" id="impurezas" name="impurezas" step="0.01" min="0" value="{{ defaults['impurezas'] }}"></div>
+    <div><label for="dano_severo_insectos">Daño severos por insectos</label><input type="number" id="dano_severo_insectos" name="dano_severo_insectos" step="0.01" min="0" value="{{ defaults['dano_severo_insectos'] }}"></div>
+    
+    <h2 class="section-header">Conteo de Defectos Secundarios</h2>
+    <div><label for="parcial_negro">Parcial negro</label><input type="number" id="parcial_negro" name="parcial_negro" step="0.01" min="0" value="{{ defaults['parcial_negro'] }}"></div>
+    <div><label for="parcial_agrio">Parcial agrio</label><input type="number" id="parcial_agrio" name="parcial_agrio" step="0.01" min="0" value="{{ defaults['parcial_agrio'] }}"></div>
+    <div><label for="pergamino">Pergamino</label><input type="number" id="pergamino" name="pergamino" step="0.01" min="0" value="{{ defaults['pergamino'] }}"></div>
+    <div><label for="flotador">Flotador</label><input type="number" id="flotador" name="flotador" step="0.01" min="0" value="{{ defaults['flotador'] }}"></div>
+    <div><label for="inmaduro">Inmaduro</label><input type="number" id="inmaduro" name="inmaduro" step="0.01" min="0" value="{{ defaults['inmaduro'] }}"></div>
+    <div><label for="averanado">Averanado</label><input type="number" id="averanado" name="averanado" step="0.01" min="0" value="{{ defaults['averanado'] }}"></div>
+    <div><label for="concha">Concha</label><input type="number" id="concha" name="concha" step="0.01" min="0" value="{{ defaults['concha'] }}"></div>
+    <div><label for="partido_mordido">Partido/Mordido</label><input type="number" id="partido_mordido" name="partido_mordido" step="0.01" min="0" value="{{ defaults['partido_mordido'] }}"></div>
+    <div><label for="cascara_pulpa_seca">Cascara/Pulpa seca</label><input type="number" id="cascara_pulpa_seca" name="cascara_pulpa_seca" step="0.01" min="0" value="{{ defaults['cascara_pulpa_seca'] }}"></div>
+    <div><label for="dano_leve_insectos">Daño leve por insectos</label><input type="number" id="dano_leve_insectos" name="dano_leve_insectos" step="0.01" min="0" value="{{ defaults['dano_leve_insectos'] }}"></div>
+    
+    <h2 class="section-header">Perfil de Tostado</h2>
+    <div>
+      <label for="perfil">Perfil</label>
+      <select id="perfil" name="perfil">
+        <option value="Frutos Citricos" {% if defaults['perfil'] == 'Frutos Citricos' %}selected{% endif %}>Frutos Citricos</option>
+        <option value="Frutos de Huesos" {% if defaults['perfil'] == 'Frutos de Huesos' %}selected{% endif %}>Frutos de Huesos</option>
+        <option value="Caramelo" {% if defaults['perfil'] == 'Caramelo' %}selected{% endif %}>Caramelo</option>
+        <option value="Chocolate" {% if defaults['perfil'] == 'Chocolate' %}selected{% endif %}>Chocolate</option>
+        <option value="Blends" {% if defaults['perfil'] == 'Blends' %}selected{% endif %}>Blends</option>
+      </select>
+    </div>
+    <div><label for="caramelizacion">Caramelizacion (min)</label><input type="number" id="caramelizacion" name="caramelizacion" step="0.01" min="0" value="{{ defaults['caramelizacion'] }}"></div>
+    <div><label for="desarrollo">Desarrollo (min)</label><input type="number" id="desarrollo" name="desarrollo" step="0.01" min="0" value="{{ defaults['desarrollo'] }}"></div>
+    
+    <div class="full" style="text-align:center; margin-top:10px;">
+      <button type="submit">Submit</button>
+      <button type="button" onclick="cleanPerfiladoForm()">Clean form</button>
+    </div>
+  </form>
+
+  <script>
+    function cleanPerfiladoForm() {
+      const form = document.getElementById('perfiladoForm');
+      form.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(el => el.value = '');
+      form.querySelector('select').selectedIndex = 0;
+    }
+  </script>
+
+  {% if last_submission %}
+  <div class="full" style="margin-top:30px; border:1px solid #ccc; border-radius:8px; padding:16px; background:#f9f9f9;">
+    <h2>Last Submission</h2>
+    <ul>
+      <li><strong>ID Trillado:</strong> {{ last_submission['id_trillado'] }}</li>
+      <li><strong>Muestra Pergamiño (g):</strong> {{ last_submission['muestra_pergamino'] }}</li>
+      <li><strong>Humedad Pergamino (%):</strong> {{ last_submission['humedad_pergamino'] }}</li>
+      <li><strong>Muestra Trillado (g):</strong> {{ last_submission['muestra_trillado'] }}</li>
+      <li><strong>Malla:</strong> {{ last_submission['malla'] }}</li>
+      <li><strong>Densidad:</strong> {{ last_submission['densidad'] }}</li>
+      <li><strong>Humedad Grano Verde (g):</strong> {{ last_submission['humedad_grano_verde'] }}</li>
+      <li><strong>Negro:</strong> {{ last_submission['negro'] }}</li>
+      <li><strong>Agrio:</strong> {{ last_submission['agrio'] }}</li>
+      <li><strong>Cereza Seca:</strong> {{ last_submission['cereza_seca'] }}</li>
+      <li><strong>Daño por hongo:</strong> {{ last_submission['dano_hongo'] }}</li>
+      <li><strong>Impurezas:</strong> {{ last_submission['impurezas'] }}</li>
+      <li><strong>Daño severos por insectos:</strong> {{ last_submission['dano_severo_insectos'] }}</li>
+      <li><strong>Parcial negro:</strong> {{ last_submission['parcial_negro'] }}</li>
+      <li><strong>Parcial agrio:</strong> {{ last_submission['parcial_agrio'] }}</li>
+      <li><strong>Pergamino:</strong> {{ last_submission['pergamino'] }}</li>
+      <li><strong>Flotador:</strong> {{ last_submission['flotador'] }}</li>
+      <li><strong>Inmaduro:</strong> {{ last_submission['inmaduro'] }}</li>
+      <li><strong>Averanado:</strong> {{ last_submission['averanado'] }}</li>
+      <li><strong>Concha:</strong> {{ last_submission['concha'] }}</li>
+      <li><strong>Partido/Mordido:</strong> {{ last_submission['partido_mordido'] }}</li>
+      <li><strong>Cascara/Pulpa seca:</strong> {{ last_submission['cascara_pulpa_seca'] }}</li>
+      <li><strong>Daño leve por insectos:</strong> {{ last_submission['dano_leve_insectos'] }}</li>
+      <li><strong>Perfil:</strong> {{ last_submission['perfil'] }}</li>
+      <li><strong>Caramelizacion (min):</strong> {{ last_submission['caramelizacion'] }}</li>
+      <li><strong>Desarrollo (min):</strong> {{ last_submission['desarrollo'] }}</li>
+    </ul>
+  </div>
+  {% endif %}
+</body>
+</html>

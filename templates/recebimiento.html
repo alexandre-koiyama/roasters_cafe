@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Coffee Reception Form</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body { font-family: Arial, sans-serif; max-width:900px; margin:30px auto; padding:0 16px; }
+    h1 { text-align:center; }
+    form { display:grid; grid-template-columns: 1fr 1fr; gap:12px; align-items:stretch; }
+    label { font-weight:600; margin-bottom:6px; display:block; }
+    input[type="text"], input[type="number"], input[type="date"], textarea {
+      width:100%; padding:8px; box-sizing:border-box; border:1px solid #ccc; border-radius:6px;
+    }
+    textarea { resize:vertical; min-height:80px; }
+    .full { grid-column: 1 / -1; }      /* span both columns */
+    .checkbox-row { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+    .checkbox-row label { font-weight:normal; }
+    button { padding:10px 16px; border-radius:8px; cursor:pointer; border:none; background:#1f8ef1; color:white; font-weight:600; }
+    .small { font-size:0.9rem; color:#444; }
+  </style>
+</head>
+<body>
+  <h1>Coffee Reception Form</h1>
+
+  {% if msg %}
+  <div style="margin:16px 0; color: #d9534f; font-weight: bold;">{{ msg }}</div>
+  {% endif %}
+
+
+  <form id="recebimientoForm" method="post" action="/recebimiento">
+    <div>
+      <label for="fecha">Fecha</label>
+      <input type="date" id="fecha" name="fecha" required value="{{ defaults['fecha'] }}">
+    </div>
+    <div>
+      <label for="provedor">Provedor</label>
+      <input type="text" id="provedor" name="provedor" required value="{{ defaults['provedor'] }}">
+    </div>
+    <div>
+      <label for="ciudad">Ciudad</label>
+      <input type="text" id="ciudad" name="ciudad" value="{{ defaults['ciudad'] }}">
+    </div>
+    <div>
+      <label for="origen">Origen</label>
+      <input type="text" id="origen" name="origen" value="{{ defaults['origen'] }}">
+    </div>
+    <div>
+      <label for="lote_bolsa">Lote / Bolsa</label>
+      <input type="text" id="lote_bolsa" name="lote_bolsa" value="{{ defaults['lote_bolsa'] }}">
+    </div>
+    <div>
+      <label for="cantidad_kg">Cantidad (Kg)</label>
+      <input type="number" id="cantidad_kg" name="cantidad_kg" step="0.01" min="0" value="{{ defaults['cantidad_kg'] }}">
+    </div>
+    <div>
+      <label for="humedad">Humedad (%)</label>
+      <input type="number" id="humedad" name="humedad" step="0.01" min="0" max="100" value="{{ defaults['humedad'] }}">
+    </div>
+    <div>
+      <label for="motorista">Motorista</label>
+      <input type="text" id="motorista" name="motorista" value="{{ defaults['motorista'] }}">
+    </div>
+    <div>
+      <label for="vehiculo_placa">Vehiculo Placa</label>
+      <input type="text" id="vehiculo_placa" name="vehiculo_placa" value="{{ defaults['vehiculo_placa'] }}">
+    </div>
+    <div class="full">
+      <label for="observacion">Observacion</label>
+      <textarea id="observacion" name="observacion">{{ defaults['observacion'] }}</textarea>
+    </div>
+    <div class="full small">Confirme con (✔) si estuvier ok, si no dejar en blanco:</div>
+    <div class="checkbox-row full">
+      <label>
+        <input type="checkbox" id="libre_contaminacion" name="libre_contaminacion" value="yes" {% if defaults['libre_contaminacion']=='yes' %}checked{% endif %}>
+        Café libre de contaminación
+      </label>
+      <label>
+        <input type="checkbox" id="vehiculo_sin_contaminacion" name="vehiculo_sin_contaminacion" value="yes" {% if defaults['vehiculo_sin_contaminacion']=='yes' %}checked{% endif %}>
+        Vehículo sin contaminación
+      </label>
+      <label>
+        <input type="checkbox" id="buen_estado" name="buen_estado" value="yes" {% if defaults['buen_estado']=='yes' %}checked{% endif %}>
+        Café y bolsa en bueno estado
+      </label>
+    </div>
+    <div class="full">
+      <label for="responsable">Responsable por recibir</label>
+      <input type="text" id="responsable" name="responsable" value="{{ defaults['responsable'] }}">
+    </div>
+    <div class="full" style="text-align:center; margin-top:10px;">
+  <button type="submit">Submit</button>
+  <button type="button" onclick="cleanFormFields()">Clean form</button>
+    </div>
+
+  </form>
+
+  <script>
+    function cleanFormFields() {
+      const form = document.getElementById('recebimientoForm');
+      form.querySelectorAll('input[type="text"], input[type="number"], input[type="date"], textarea').forEach(el => el.value = '');
+      form.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
+    }
+  </script>
+
+  {% if last_submission %}
+  <div class="full" style="margin-top:30px; border:1px solid #ccc; border-radius:8px; padding:16px; background:#f9f9f9;">
+    <h2>Last Submission</h2>
+    <ul>
+      <li><strong>ID:</strong> {{ last_submission['id_recibimiento'] }}</li>
+      <li><strong>Fecha:</strong> {{ last_submission['fecha'] }}</li>
+      <li><strong>Provedor:</strong> {{ last_submission['provedor'] }}</li>
+      <li><strong>Ciudad:</strong> {{ last_submission['ciudad'] }}</li>
+      <li><strong>Origen:</strong> {{ last_submission['origen'] }}</li>
+      <li><strong>Lote / Bolsa:</strong> {{ last_submission['lote_bolsa'] }}</li>
+      <li><strong>Cantidad (Kg):</strong> {{ last_submission['cantidad_kg'] }}</li>
+      <li><strong>Humedad (%):</strong> {{ last_submission['humedad'] }}</li>
+      <li><strong>Motorista:</strong> {{ last_submission['motorista'] }}</li>
+      <li><strong>Vehiculo Placa:</strong> {{ last_submission['vehiculo_placa'] }}</li>
+      <li><strong>Observacion:</strong> {{ last_submission['observacion'] }}</li>
+      <li><strong>Café libre de contaminación:</strong> {{ last_submission['libre_contaminacion'] }}</li>
+      <li><strong>Vehículo sin contaminación:</strong> {{ last_submission['vehiculo_sin_contaminacion'] }}</li>
+      <li><strong>Café y bolsa en bueno estado:</strong> {{ last_submission['buen_estado'] }}</li>
+      <li><strong>Responsable por recibir:</strong> {{ last_submission['responsable'] }}</li>
+    </ul>
+  </div>
+  {% endif %}
+</body>
+</html>
