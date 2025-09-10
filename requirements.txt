@@ -3,3 +3,4 @@ uvicorn[standard]
 jinja2
 gspread
 oauth2client
+python-multipart
