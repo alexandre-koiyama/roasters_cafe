@@ -332,7 +332,7 @@ async def perfilado_submit_form(
     id_trillado_options = [r[5] for r in trillado_rows[1:] if len(r) > 5] if len(trillado_rows) > 1 else []
 
     #id_perfilado
-    id_perfilado = id_trillado + "-"+perfil[-2:].upper()
+    id_perfilado = id_trillado + "-"+perfil[:2].upper()
 
     # Save to Perfilado worksheet
     sheet_perfilado = get_sheet("Perfilado")
