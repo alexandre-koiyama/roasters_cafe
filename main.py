@@ -32,9 +32,14 @@ def get_sheet(work_sheet_name: str):
     return client.open(SHEET_NAME).worksheet(work_sheet_name)
 
 
-@app.get("/")
-def home():
-    return {"message": "Welcome to Roasters Café API."}
+@app.get("/", response_class=HTMLResponse)
+def home(request: Request):
+    return templates.TemplateResponse(
+        "index.html",
+        {
+            "request": request
+        }
+    )
 
 
 # === Recebimiento Routes ===

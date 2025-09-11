@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Roasters Café - Home</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body { 
+      font-family: Arial, sans-serif; 
+      max-width: 900px; 
+      margin: 30px auto; 
+      padding: 0 16px; 
+      background-color: #f8f9fa;
+    }
+    h1 { 
+      text-align: center; 
+      color: #333; 
+      margin-bottom: 40px;
+    }
+    .welcome-text {
+      text-align: center;
+      font-size: 1.2em;
+      color: #666;
+      margin-bottom: 40px;
+    }
+    .nav-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin: 40px 0;
+    }
+    .nav-card {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 30px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      text-decoration: none;
+      color: inherit;
+    }
+    .nav-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+      text-decoration: none;
+      color: inherit;
+    }
+    .nav-card h3 {
+      color: #1f8ef1;
+      margin-bottom: 15px;
+      font-size: 1.3em;
+    }
+    .nav-card p {
+      color: #666;
+      line-height: 1.5;
+      margin: 0;
+    }
+    .workflow-info {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      margin-top: 40px;
+      border: 1px solid #ddd;
+    }
+    .workflow-info h2 {
+      color: #333;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .workflow-steps {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .workflow-step {
+      background: #1f8ef1;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-weight: 600;
+      flex: 1;
+      text-align: center;
+      min-width: 120px;
+    }
+    .workflow-arrow {
+      font-size: 1.5em;
+      color: #1f8ef1;
+      font-weight: bold;
+    }
+    @media (max-width: 768px) {
+      .workflow-steps {
+        flex-direction: column;
+      }
+      .workflow-arrow {
+        transform: rotate(90deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>☕ Roasters Café</h1>
+  
+  <div class="welcome-text">
+    Sistema de Gestión de Café - Desde Recepción hasta Tostado
+  </div>
+
+  <div class="nav-container">
+    <a href="/recebimiento" class="nav-card">
+      <h3>📦 Recebimiento</h3>
+      <p>Registro de recepción de café verde, control de proveedores y calidad inicial</p>
+    </a>
+
+    <a href="/trillado" class="nav-card">
+      <h3>🌾 Trillado</h3>
+      <p>Proceso de trillado del café, registro de lotes y control de grano</p>
+    </a>
+
+    <a href="/perfilado" class="nav-card">
+      <h3>📊 Perfilado</h3>
+      <p>Análisis de calidad, defectos y perfil de tostado del café procesado</p>
+    </a>
+
+    <a href="/tostado" class="nav-card">
+      <h3>🔥 Tostado</h3>
+      <p>Registro del proceso de tostado, batches y perfiles finales</p>
+    </a>
+  </div>
+
+  <div class="workflow-info">
+    <h2>Flujo del Proceso</h2>
+    <div class="workflow-steps">
+      <div class="workflow-step">Recebimiento</div>
+      <div class="workflow-arrow">→</div>
+      <div class="workflow-step">Trillado</div>
+      <div class="workflow-arrow">→</div>
+      <div class="workflow-step">Perfilado</div>
+      <div class="workflow-arrow">→</div>
+      <div class="workflow-step">Tostado</div>
+    </div>
+  </div>
+
+</body>
+</html>
